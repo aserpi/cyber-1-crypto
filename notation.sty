@@ -9,7 +9,7 @@
 % This is a reduced version of a larger package, and contains an environment definition that enables quick drawing of cryptographic games, with the purpose of being as least intrusive, and most readable as possibile to the document writer/programmer.
 % It is partially founded on the work of "asmeikal", found in GitHub: (https://github.com/asmeikal/crypto16)
 
-\ProvidesPackage{notation}[2018/09/21 v1.0-crypto The Notation]
+\ProvidesPackage{notation}[2020/10/12 v1.1-crypto The Notation]
 
 % More blackboard symbols
 \RequirePackage{bbm}
@@ -30,6 +30,8 @@
 
 % Cryptography
 %
+% Uniform distribution
+\newcommand{\unif}[1]{\operatorname{unif}\{#1\}}
 % Pick UAR [math mode]
 \newcommand{\pickUAR}{\buildrel\$\over\gets}
 % Evaluate distribution [math mode]
@@ -48,13 +50,11 @@
 % Acronyms
 %
 % Independent and Identically Distributed
-\newcommand{\iid}{\textsc{iid}}
-% Uniform distribution
-\newcommand{\unif}[1]{\operatorname{unif}\{#1\}}
-% Uniformly At Random
-\newcommand{\uar}{\textsc{uar}}
+\newcommand{\iid}{i.i.d}
 % Probabilistic Polynomial Time
 \newcommand{\ppt}{\textsc{ppt}}
+% Uniformly At Random
+\newcommand{\uar}{\textsc{uar}}
 
 % Secret Key Encryption
 \newcommand{\ske}{\textsc{ske}}
