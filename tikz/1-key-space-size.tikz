@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=nodecircle, minimum size=1.5cm] (1) at (0, 0) {};
+		\node [style=nodecircle, minimum size=3cm] (0) at (0, 0) {$\D$};
+		\node [style=none] (2) at (1.1, 0) {$\M$};
+		\node [style=point, label={left:$m$}] (3) at (0, -1.15) {};
+	\end{pgfonlayer}
+\end{tikzpicture}

@@ -1,6 +1,7 @@
 \usepackage{titletoc}
 
-\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
 \hypersetup{
     colorlinks,
     linkcolor={red!70!black},
@@ -13,7 +14,6 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{thmtools}
-\usepackage{acronym}
 \usepackage{multirow}
 \usepackage{cleveref}
 \usepackage{graphicx}
@@ -30,7 +30,7 @@
 \usepackage{framed}
 \usepackage{stackengine}
 \usepackage{scalerel}
-\usepackage{enumerate}
+\usepackage{enumitem}
 \usetikzlibrary{tikzmark,decorations.pathreplacing,positioning,shapes,fit,arrows}
 %\makeatletter
 \usepackage[normalem]{ulem} % For strikethrough text
@@ -95,7 +95,8 @@
 \newcommand{\NaturalsZ}{\mathbb{N}}
 \newcommand{\Integers}{\mathbb{Z}}
 \newcommand{\Reals}{\mathbb{R}}
-\newcommand{\Bool}{\{0,1\}}
+\newcommand{\Bool}{\{0, 1\}}
+\newcommand{\BoolSym}{\{\top, \bot\}}
 \newcommand{\QR}[1][p]{\mathbb{QR}_{#1}}
 
 \newcommand{\IntegersPrimeGroup}[1][p]{\Integers^{\star}_{#1}}
@@ -108,8 +109,8 @@
 \newcommand{\Mac}{\mathrm{Mac}}
 \newcommand{\Sign}{\mathrm{Sign}}
 \newcommand{\Vrfy}{\mathrm{Vrfy}}
-\newcommand{\Enc}{\mathrm{Enc}}
-\newcommand{\Dec}{\mathrm{Dec}}
+\newcommand{\Enc}{\texttt{Enc}}
+\newcommand{\Dec}{\texttt{Dec}}
 \newcommand{\Trans}{\mathrm{Trans}}
 
 \renewcommand{\Game}{\G}

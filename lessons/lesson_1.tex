@@ -1,164 +1,181 @@
 \mychapter{1}{Lesson 1} %180926
+Talking cryptography is usually done in the `confidentiality' realm, where two characteristics in a communication channel are desirable: it must be \emph{secret}, and \emph{authentic}.
 
-Talking cryptography is usually done in the ``confidentiality'' realm, where two characteristics in a communication channel are desirable: it must be \emph{secret}, and \emph{authentic}.
+
 
 \section{Secret communication}
+Modern confidentiality/authentication systems are designed under \emph{Kerckhoffs's principle}, which states that a secure system shall only rely on the encryption keys and not on the algorithm's secrecy.
+The principle is often condensed as \emph{`no security by obscurity'}.
 
-\todo{Image of Alice,Bob, Eve in ske}
+In symmetric-key encryption (\ske), the same cryptographic key is used for both encryption of plaintext and decryption of ciphertext.
+However, sharing the key between two parties without the risk of eavesdropping is a costly operation.
 
-Modern confidentiality/authentication systems are forged under \emph{Kerckhoffs's principle}, which states that a secure system shall only rely on the encryption keys, and not on the underlying algorithm's secrecy; in short, \emph{``No security by obscurity''}. However sharing the key between two parties without the risk of eavesdropping is a costly operation.
+\begin{figure}[h]
+	\centering
+	\input{tikz/1-ske.tikz}
+	\caption{Symmetric-key encryption}
+\end{figure}
 
-The typical objects defined and used troughout cryptography discourse are:
-\begin{itemize}
-    \item $\K = $ Key Space
-    \item $\M = $ Message Space
-    \item $\C = $ Ciphertext Space
-    \item $\textsf{Enc}: \K \times \M \to \C$
-    \item $\textsf{Dec}: \K \times \C \to \M$
+
+\subsection{Syntax}
+The typical objects defined and used throughout cryptography discourses are:
+%
+\begin{itemize}[itemsep=1pt,parsep=0pt]
+    \item the key space $\K$
+    \item the message space $\M$
+    \item the ciphertext space $\C$
+    \item the encryption function $\Enc: \K \times \M \to \C$, $(k, m) \mapsto c$
+    \item the decryption function $\Dec: \K \times \C \to \M$, $(k, c) \mapsto m$.
 \end{itemize}
-
-\textsf{Enc} and \textsf{Dec} form a cryptographic scheme (a secrecy one, in detail), and it must abide by the rule:
+\Enc{} and \Dec{} form a cryptographic scheme, which must be correct:
 \[
-    \forall m \in \M, \forall k \in \K \implies \textsf{Dec}(k, \textsf{Enc}(k, m)) = m
+    \forall m \in \M \ \forall k \in \K \ \Enc(k, m) = c \iff \Dec(k, c) = m \, .
 \]
 
-\begin{definition}
-    (\textit{Shannon's ``Perfect secrecy''}): Let $M$ be any distribution over the message space $\M$, and $K$ a uniform distribution over $\K$. Then, the cryptosystem $\Xi: (\textsf{Enc}, \textsf{Dec})$ is deemed \emph{perfectly secret} iff the ciphertext obtained by applying the encryption routine to a message sampled by $M$ using tke key in $K$ is effectively useless in retrieving any info about the message itself, apart from the key-supplied decryption routine. Formally:
-    \[
-        \forall M \sim \mathcal{R}and(\M), C \sim \mathcal{R}and(\C) \implies \Pr[M \evaluatesto m] = \Pr[M \evaluatesto m|C \evaluatesto c]
-    \]
-\end{definition}
-Note how this definition doesn't involve the encryption key. % Is it important? Why?
 
+\subsection{Perfect secrecy}
+\begin{definition}[Shannon's `Perfect secrecy']\label{def:perfect-secrecy}
+	Let $M$ be any distribution over the message space $\M$, $C$ any distribution over the cyphertext space $\C$ and $K$ a uniform distribution over the key space $\K$.
+    Then, the cryptosystem (\Enc, \Dec) is deemed \emph{perfectly secret} iff $\forall M, m \in \M \ \forall c \in C$
+%
+    \begin{equation}\label{eq:perfect-secrecy-1}
+    	 \Pr[M \evaluatesto m] = \Pr[M \evaluatesto m| C \evaluatesto c] \, .
+    \end{equation}
+\end{definition}
+
+The cyphertext reveals nothing about the message, thus making the encryption method uncrackable even by adversaries with infinite computational power.
+This definition does not involve the encryption key because it must hold for all keys in the key space.
 The perfect secrecy definition can be rephrased in different ways, bringing more details to light:
-\begin{enumerate}
-    \item $\Pr[M \evaluatesto m] = \Pr[M \evaluatesto m|C \evaluatesto c]$
-    \item $M \mathrel{\perp\!\!\!\!\perp} C$ %TODO choose a better symbol
-    %TODOI Better formalize: the variables m, m' and k are 'chosen' by their own distibutions, c is just a result instead
-    % Maybe decompose it into smaller bits: use event sets instead
-    \item $\forall m_1, m_2 \in \M, c \in \C, k \pickUAR \K \implies \Pr[\textsf{Enc}(k, m_1) \evaluatesto c] = \Pr[\textsf{Enc}(k, m_2) \evaluatesto c]$
+%
+\begin{enumerate}[itemsep=1pt,parsep=0pt]
+    \item equation \ref{eq:perfect-secrecy-1}
+    \item $M \bot C$ ($M$ and $C$ are independent)\hfill\refstepcounter{equation}\textup{(\theequation)}\label{eq:perfect-secrecy-2}
+    \item $\forall m_1, m_2 \in \M, c \in \C, k \pickUAR\footnote{\href{https://math.stackexchange.com/a/1576505}{What does this dollar sign over arrow in function mapping mean?}} \K \implies \Pr[\Enc(k, m_1) \evaluatesto c] = \Pr[\Enc(k, m_2) \evaluatesto c]$.\hfill\refstepcounter{equation}\textup{(\theequation)}\label{eq:perfect-secrecy-3}
 \end{enumerate}
     
 \begin{proposition}
     All the previous statements are equivalent.
 \end{proposition}
-
 \begin{proof}
-    The proof is structured as a cyclic implication between the threee definitions:
-    
+    The proof is structured as a cyclic implication between the three definitions:
+%
     \begin{itemize}
-        \item $(1) \implies (2)$: Start from one side of the independency ddefinition, and work through the other:
+    	\item $(1) \implies (2)$
         \begin{align*}
             & \Pr[C \evaluatesto c \wedge M \evaluatesto m] \\
-            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m|C \evaluatesto c] & \text{(Conditioned prob.)} \\
-            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m] & \text{(Using 1.)} \\
+            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m|C \evaluatesto c] & \text{(Cond. prob.)} \\
+            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-1})} \\
+            \implies& M \bot C
         \end{align*}
-        This proves that $M$ and $C$ are independent distributions.
-        
-        \item $(2) \implies (3)$: For the proof's purposes, let $M$ be an arbitrary distribution over $\M$; recall that, by definition: $C := \textsf{Enc}(K, M)$:
+%
+        \item $(2) \implies (3)$ fix $M$. Then,
         \begin{align*}
-            & \Pr[\textsf{Enc}(K, m_1) \evaluatesto c] & \\
-            =& \Pr[\textsf{Enc}(K, M) \evaluatesto c| M \evaluatesto m_1] & \text{(Introducing $M$)} \\
-            =& \Pr[C \evaluatesto c|M \evaluatesto m_1] & \text{($C$ defintion)} \\
-            =& \Pr[C \evaluatesto c] & \text{(Using 2.)} \\
-            =& \dots & \text{(Same steps reversed, where $m_1 \mapsto m_2$)} \\
-            =& \Pr[\textsf{Enc}(K, m_2) \evaluatesto c] & 
+            & \Pr[\Enc(K, m_1) \evaluatesto c] & \\
+            =& \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_1] & \\
+            =& \Pr[C \evaluatesto c|M \evaluatesto m_1] & \text{($C$ def.)} \\
+            =& \Pr[C \evaluatesto c] & \text{(Using \ref{eq:perfect-secrecy-2})} \\
+            =& \Pr[C \evaluatesto c|M \evaluatesto m_2] & \text{(Reverse steps with $m_2$ instead of $m_1$)} \\
+            =& \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_2] & \\
+            =& \Pr[\Enc(K, m_2) \evaluatesto c] &
         \end{align*}
-
-
-        \item $(3) \implies (1)$:
+%
+        \item $(3) \implies (1)$
         \begin{align*}
             & \Pr[C \evaluatesto c] & \\
             =& \sum_{m}\Pr[C \evaluatesto c \wedge M \evaluatesto m] & \text{(Total prob.)} \\
-            =& \sum_{m}\Pr[\textsf{Enc}(K, M) \evaluatesto c \wedge M \evaluatesto m] & \text{($C$ definition)} \\
-            =& \sum_{m}\Pr[\textsf{Enc}(K, M) \evaluatesto c|M \evaluatesto m]\Pr[M \evaluatesto m] & \text{(Cond. prob. def.)} \\
-            =& \sum_{m}\Pr[\textsf{Enc}(K, m) \evaluatesto c]\Pr[M \evaluatesto m] & \text{(Cond. collapse)} \\
-            =& \Pr[\textsf{Enc}(K, \overline{m}) \evaluatesto c] \sum_{m}\Pr[M \evaluatesto m] & \text{(Using 3.)} \\ %TODO Not convinced thoroughly
-            =& \Pr[\textsf{Enc}(K, \overline{m}) \evaluatesto c] & \text{(Total prob.)} \\
-            =& \Pr[\textsf{Enc}(K, M) \evaluatesto c|M \evaluatesto \overline{m}] & \text{(Introducing $M$)} \\
-            =& \Pr[C \evaluatesto c|M \evaluatesto \overline{m}] & \text{($C$ definition)}
+            =& \sum_{m}\Pr[\Enc(K, M) \evaluatesto c \wedge M \evaluatesto m] & \text{($C$ def.)} \\
+            =& \sum_{m}\Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m]\Pr[M \evaluatesto m] & \text{(Cond. prob.)} \\
+            =& \sum_{m}\Pr[\Enc(K, m) \evaluatesto c]\Pr[M \evaluatesto m] & \text{(Prob. collapse)} \\
+            =& \Pr[\Enc(K, m') \evaluatesto c] \sum_{m}\Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-3})} \\
+            =& \Pr[\Enc(K, m') \evaluatesto c] & \text{(Total prob.)} \\
+            =& \Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m'] & \text{(Cond. prob.)} \\
+            =& \Pr[C \evaluatesto c|M \evaluatesto m'] & \text{($C$ def.)}
         \end{align*}
-
-        Knowing this, and applying Bayes' theorem, we get back to the first definition:
+%
+        Then,
         \begin{align*}
             & \Pr[C \evaluatesto c] = \Pr[C \evaluatesto c|M \evaluatesto m] & \\
-            \implies& \Pr[C \evaluatesto c] = \Pr[M \evaluatesto m|C \evaluatesto c]\frac{\Pr[C \evaluatesto c]}{\Pr[M \evaluatesto m]} & \text{(Bayes' theorem)} \\
+            \implies & \Pr[C \evaluatesto c] = \Pr[M \evaluatesto m|C \evaluatesto c]\frac{\Pr[C \evaluatesto c]}{\Pr[M \evaluatesto m]} & \text{(Bayes's th.)} \\
             \implies& \Pr[M \evaluatesto m] = \Pr[M \evaluatesto m|C \evaluatesto c] &
         \end{align*}
-
     \end{itemize}
-
-    Thus, we conclude that all three definitions for perfect secrecy are equivalent.
-
+%
+    All three definitions for perfect secrecy are equivalent.
 \end{proof}
 
-\section{One Time Pad (OTP)}
 
-Let $\K = \M = \C = \binary^l$, and define the following cryptographic scheme:
+\subsection{One-time pad (\otp)}
+The one-time pad (\otp) is a cryptographic scheme such that
 \begin{itemize}
-    \item $\textsf{Enc}(k, m) = k \xor m = c$
-    \item $\textsf{Dec}(k, c) = k \xor c = m$
+	\item $\K = \M = \C \triangleq \Bool^l$
+	\item $K \sim \unif{\K}$
+    \item $\Enc(k, m) \triangleq k \xor m$
+    \item $\Dec(k, c) \triangleq k \xor c$.
 \end{itemize}
+The scheme is correct because $\Dec(k, \Enc(k, m)) = \Dec(k, k \xor m) = k \xor k \xor m = m$.
 
-Proof of correctness goes like: $\textsf{Dec}(k, \textsf{Enc}(k, m)) = \textsf{Dec}(k, k \xor m) = k \xor k \xor m = m$.
-
-\begin{theorem}
-    The \emph{One-Time Pad} scheme is perfectly secret.
+\begin{theorem}\label{th:otp}
+    \otp{} is perfectly secret.
 \end{theorem}
 \begin{proof}
-    Let $K \sim \mathcal{U}nif(\K)$. Then, $\forall m_1, m_2, c \in \binary^l$:
+    We have that $\forall m_1, m_2 \in \M$ and $\forall c \in \C$
     \begin{align*}
-        & \Pr[\textsf{Enc}(K, m_1) \evaluatesto c] & \\
+        & \Pr[\Enc(K, m_1) \evaluatesto c] & \\
         =& \Pr[K \xor m_1 \evaluatesto c] & \\
         =& \Pr[K \evaluatesto c \xor m_1] & \\
-        =& |\K|^{-1} & \text{(K is uniform)} \\
-        =& \dots & \text{(Same steps reversed, where $m_1 \mapsto m_2$)} \\
-        =& \Pr[\textsf{Enc}(K, m_2) \evaluatesto c] &  
+        =& |\K|^{-1} & \text{($K$ is uniform)} \\
+        =& \dots & \text{(Reverse steps with $m_1$ instead of $m_2$)} \\
+        =& \Pr[\Enc(K, m_2) \evaluatesto c] &  
     \end{align*}
-    This satisfies the third definition of perfect secrecy.
+    This satisfies equation \ref{eq:perfect-secrecy-3}.
 \end{proof}
 
 %TODO OLD NOTE: Observation: k is truly random, but fixed, compare with Pi_\xor's encryption routine: from a security standpoint, nothing changes! actualy, \Pi_\xor may be weaker bruteforce wise than OTP!
 
-By observing our recent proof, some insights (and problems) arise:
+By observing the proof of theorem \ref{th:otp}, we can  gain a deeper insight of \otp:
+%
 \begin{enumerate}
-    \item The key and the message's lengths must always match ($|k| = |m|$);
-    \item As the name suggests, keys are useful just for one encryption. Otherwise, given two encryptions witht he same key, an attacker may exploit the \textsc{xor}'s idempotency to extract valuable information from both ciphertexts\footnote{This vulnerability of applying a function on a ciphertext, and expecting as a result the image of the original message by the same function, is called \emph{malleability}, and is explored further in the notes.}:
+    \item $|k| = |m|$ (key and message sizes match)
+    \item if a key is used multiple two or more times, an attacker may exploit \textsc{xor}'s idempotency to extract valuable information from the ciphertexts\footnote{A cryptographic algorithm is said to be \emph{malleable} if there exists a function $f$ that transforms a ciphertext into another ciphertext which decrypts to a related plaintext (i.e. $f(c) = \Enc(k, f(m))$). This concept will be explored further.}:
     \[
         c_1 = k \xor m_1 \wedge c_2 = k \xor m_2 \implies c_1 \xor c_2 = m_1 \xor m_2
     \]
-    
 \end{enumerate}
+%
+Combined with the fact that keys must be pre-emptively shared in a secure fashion, these problems make \otp{} impractical.
 
-%\footnote{An encryption algorithm is "malleable" if it is possible to transform a ciphertext into another ciphertext which decrypts to a related plaintext. That is, given an encryption $c$ of a plaintext $m$, it is possible to generate another valid ciphertext $c'$, for a known $Enc$, $Dec$, without necessarily knowing or learning $m$.}
 
-Combined with the fact that keys must be preemptively shared in a secure fashion, these problems make for a quite impractical cryptographic scheme. One can further this analysis and generalize it to all ``perfect'' schemes, giving a rather delusive conclusion:
+\subsection{Size of the key space}
+It is possible to generalise the analysis on \otp{} to all perfectly secret schemes.
 
 \begin{theorem}
-    In any perfectly secret \ske{}: $|\K| \geq |\M|$
+    In any perfectly secret \ske, the size of the key space must be greater than or equal to the size of the message space:
+    \[
+    	|\K| \geq |\M| \, .
+    \]
 \end{theorem}
 \begin{proof}
-    Perfection will be disproved by breaking the first definition. Let $M \sim \mathcal{U}nif(\M)$, and take $c \in \C : \Pr[C \evaluatesto c] > 0$. Consider $D = \{\textsf{Dec}(k, c) : k \in \K\}$ as the set of all images of the decryption routine with all keys in $\K$. The offending assumption is that $|\K| < |\M|$. Then, by how $D$ is defined:
+    Perfect secrecy will be disproved by breaking the first definition. \\
+    Define $M \sim \unif{\M}$ and $c \in \C : \Pr[C \evaluatesto c] > 0$.
+    Let $\D \triangleq \{\Dec(k, c) : k \in \K\}$ be the set of all images of the decryption routine with all keys in $\K$ and assume $|\K| < |\M|$ (negation of the thesis).
+    Then, using the definition of $\D$ we have
     \[
-        |D| \leq |\K| < |\M| \implies \exists m \in \M \setminus D
+        |D| \leq |\K| < |\M| \implies \exists m \in \M \setminus \D \, .
     \]
-
+    
     \begin{figure}[h]
-        \centering
-        \def\firstcircle{(0,0) circle (1.5cm)}
-        \def\secondcircle{(60:0) circle (0.9cm)}
-        \begin{tikzpicture}
-            \begin{scope}[shift={(3cm,-5cm)}]
-                \draw \firstcircle node[label={[xshift=1.0cm, yshift=0.3cm]$\M$}] { };
-                \draw \secondcircle node[label={[xshift=1.2cm, yshift=-0.5cm]$m$}] {$D$};
-            \end{scope}
-        \end{tikzpicture}
-        \caption{Where the messages stand}
+    	\centering
+    	\input{tikz/1-key-space-size.tikz}
+    	\caption{Visual representation of $\D$, $\M$ and $m$}
     \end{figure}
 
-    Fix this message $m$, and remember that by $M$'s definition, $\Pr[M \evaluatesto m] = |\M|^{-1}$. Since $m \notin D$, there can be no key in $\K$ such that $\textsf{Dec}(k, c) = m$. By observing that $C$ strictly distributes over $D$, where $m$ is not present, $\Pr[M \evaluatesto m|C \evaluatesto c] = 0$. Summarizing up:
+    Fix $m$. Using $M$'s definition, we have $\Pr[M \evaluatesto m] = |\M|^{-1}$.
+    Since $m \notin \D$, there can be no key in $\K$ such that $\Dec(k, c) = m$.
+    We can prove $\Pr[M \evaluatesto m|C \evaluatesto c] = 0$ by observing that $C$ strictly distributes over $\D$, in which $m$ is not present.
+    
+    In conclusion, we have
     \[
-        0 = \Pr[M \evaluatesto m|C \evaluatesto c] \neq \Pr[M \evaluatesto m] = |\M|^{-1}
+        \Pr[M \evaluatesto m|C \evaluatesto c] = 0 \neq |\M|^{-1} = \Pr[M \evaluatesto m]
     \]
-    This clearly violates the first definition of perfect secrecy.
+    that clearly violates the first definition of perfect secrecy.
 \end{proof}

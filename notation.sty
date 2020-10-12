@@ -31,9 +31,9 @@
 % Cryptography
 %
 % Pick UAR [math mode]
-\newcommand{\pickUAR}{\mathrel{{\leftarrow}\vcenter{\hbox{\scriptsize\rmfamily\upshape\!\!\textsf{\$}}}}}
+\newcommand{\pickUAR}{\buildrel\$\over\gets}
 % Evaluate distribution [math mode]
-\newcommand{\evaluatesto}{\mathrel{\vcenter{\hbox{\scriptsize\rmfamily\upshape\textsf{\$}}} \!\!\! \rightarrow}}
+\newcommand{\evaluatesto}{=}
 % Default challenger
 \newcommand{\challenger}{\textsf{C}}
 % Default adversary
@@ -49,6 +49,8 @@
 %
 % Independent and Identically Distributed
 \newcommand{\iid}{\textsc{iid}}
+% Uniform distribution
+\newcommand{\unif}[1]{\operatorname{unif}\{#1\}}
 % Uniformly At Random
 \newcommand{\uar}{\textsc{uar}}
 % Probabilistic Polynomial Time
@@ -56,6 +58,8 @@
 
 % Secret Key Encryption
 \newcommand{\ske}{\textsc{ske}}
+% One-time pad
+\newcommand{\otp}{\textsc{otp}}
 % Public Key Encryption
 \newcommand{\pke}{\textsc{pke}}
 % Message Authentication Code

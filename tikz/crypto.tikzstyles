@@ -4,6 +4,8 @@
 % \tikzstyle{NAME}=[PROPERTY LIST]
 
 % Node styles
+\tikzstyle{nodecircle}=[fill=none, draw=black, shape=circle, inner sep=0pt, outer sep=0pt]
+\tikzstyle{point}=[fill=black, draw=none, shape=circle, text width=0.01cm, inner sep=0pt]
 
 % Edge styles
 \tikzstyle{leftarrow}=[->]
