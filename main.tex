@@ -1,11 +1,19 @@
+\RequirePackage{fix-cm}
 \documentclass[10pt,a4paper]{report}
-\usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-\usepackage{bold-extra} % Used for boldface-smallcaps combo in section headers
 \usepackage{notation}
 \usepackage{tikz/tikzit}
 \input{macro.tex}
 \input{tikz/crypto.tikzstyles}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\rmfamily % To load Latin Modern Roman and enable the following NFSS declarations.
+% Declare that Latin Modern Roman (lmr) should take
+% its bold (b) and bold extended (bx) weight, and small capital (sc) shape, 
+% from the corresponding Computer Modern Roman (cmr) font, for the T1 font encoding.
+\DeclareFontShape{T1}{lmr}{b}{sc}{<->ssub*cmr/bx/sc}{}
+\DeclareFontShape{T1}{lmr}{bx}{sc}{<->ssub*cmr/bx/sc}{}
+\usepackage[utf8]{inputenc}
 \begin{document}
 {\hypersetup{linkcolor=}\tableofcontents}
 \input{lessons/lesson_1.tex}
