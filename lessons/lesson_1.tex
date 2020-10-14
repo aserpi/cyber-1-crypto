@@ -63,43 +63,40 @@ It can be rephrased in different ways, bringing more details to light:
 %
     \begin{itemize}
     	\item $(1) \implies (2)$
-        \begin{align*}
-            & \Pr[C \evaluatesto c \wedge M \evaluatesto m] \\
-            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m|C \evaluatesto c] & \text{(Cond. prob.)} \\
-            =& \Pr[C \evaluatesto c] \Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-1})} \\
-            \implies& M \bot C
-        \end{align*}
+        \begin{flalign*}
+            \Pr[C \evaluatesto c \wedge M \evaluatesto m] &= \Pr[C \evaluatesto c] \Pr[M \evaluatesto m|C \evaluatesto c] & \text{(Cond. prob.)} \\
+            &= \Pr[C \evaluatesto c] \Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-1})}
+        \end{flalign*}
+    	Which implies that $M$ and $C$ are independent.
 %
         \item $(2) \implies (3)$ fix $M$. Then,
-        \begin{align*}
-            & \Pr[\Enc(K, m_1) \evaluatesto c] & \\
-            =& \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_1] & \\
-            =& \Pr[C \evaluatesto c|M \evaluatesto m_1] & \text{($C$ def.)} \\
-            =& \Pr[C \evaluatesto c] & \text{(Using \ref{eq:perfect-secrecy-2})} \\
-            =& \Pr[C \evaluatesto c|M \evaluatesto m_2] & \text{(Reverse steps with $m_2$ instead of $m_1$)} \\
-            =& \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_2] & \\
-            =& \Pr[\Enc(K, m_2) \evaluatesto c] &
-        \end{align*}
+        \begin{flalign*}% TODO: alignment
+            \Pr[\Enc(K, m_1) \evaluatesto c] &= \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_1] & \\
+            &= \Pr[C \evaluatesto c|M \evaluatesto m_1] & \text{($C$ def.)} \\
+            &= \Pr[C \evaluatesto c] & \text{(Using \ref{eq:perfect-secrecy-2})} \\
+            &= \Pr[C \evaluatesto c|M \evaluatesto m_2] & \text{(Reverse steps with $m_2$ instead of $m_1$)} \\
+            &= \Pr[\Enc(K, M) \evaluatesto c| M \evaluatesto m_2] & \\
+            &= \Pr[\Enc(K, m_2) \evaluatesto c] &
+        \end{flalign*}
 %
         \item $(3) \implies (1)$
-        \begin{align*}
-            & \Pr[C \evaluatesto c] & \\
-            =& \sum_{m}\Pr[C \evaluatesto c \wedge M \evaluatesto m] & \text{(Total prob.)} \\
-            =& \sum_{m}\Pr[\Enc(K, M) \evaluatesto c \wedge M \evaluatesto m] & \text{($C$ def.)} \\
-            =& \sum_{m}\Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m]\Pr[M \evaluatesto m] & \text{(Cond. prob.)} \\
-            =& \sum_{m}\Pr[\Enc(K, m) \evaluatesto c]\Pr[M \evaluatesto m] & \text{(Prob. collapse)} \\
-            =& \Pr[\Enc(K, m') \evaluatesto c] \sum_{m}\Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-3})} \\
-            =& \Pr[\Enc(K, m') \evaluatesto c] & \text{(Total prob.)} \\
-            =& \Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m'] & \text{(Cond. prob.)} \\
-            =& \Pr[C \evaluatesto c|M \evaluatesto m'] & \text{($C$ def.)}
-        \end{align*}
+        \begin{flalign*}
+            \Pr[C \evaluatesto c] &= \sum_{m}\Pr[C \evaluatesto c \wedge M \evaluatesto m] & \text{(Total prob.)} \\
+            &= \sum_{m}\Pr[\Enc(K, M) \evaluatesto c \wedge M \evaluatesto m] & \text{($C$ def.)} \\
+            &= \sum_{m}\Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m]\Pr[M \evaluatesto m] & \text{(Cond. prob.)} \\
+            &= \sum_{m}\Pr[\Enc(K, m) \evaluatesto c]\Pr[M \evaluatesto m] & \text{(Prob. collapse)} \\
+            &= \Pr[\Enc(K, m') \evaluatesto c] \sum_{m}\Pr[M \evaluatesto m] & \text{(Using \ref{eq:perfect-secrecy-3})} \\
+            &= \Pr[\Enc(K, m') \evaluatesto c] & \text{(Total prob.)} \\
+            &= \Pr[\Enc(K, M) \evaluatesto c|M \evaluatesto m'] & \text{(Cond. prob.)} \\
+            &= \Pr[C \evaluatesto c|M \evaluatesto m'] & \text{($C$ def.)}
+        \end{flalign*}
 %
         Then,
-        \begin{align*}
+        \begin{flalign*}
             & \Pr[C \evaluatesto c] = \Pr[C \evaluatesto c|M \evaluatesto m] & \\
-            \implies & \Pr[C \evaluatesto c] = \Pr[M \evaluatesto m|C \evaluatesto c]\frac{\Pr[C \evaluatesto c]}{\Pr[M \evaluatesto m]} & \text{(Bayes's th.)} \\
-            \implies& \Pr[M \evaluatesto m] = \Pr[M \evaluatesto m|C \evaluatesto c] &
-        \end{align*}
+            &\implies \Pr[C \evaluatesto c] = \Pr[M \evaluatesto m|C \evaluatesto c]\frac{\Pr[C \evaluatesto c]}{\Pr[M \evaluatesto m]} & \text{(Bayes's th.)} \\
+            &\implies \Pr[M \evaluatesto m] = \Pr[M \evaluatesto m|C \evaluatesto c] &
+        \end{flalign*}
     \end{itemize}
 %
     All three definitions for perfect secrecy are equivalent.
@@ -123,14 +120,13 @@ The scheme is correct because $\Dec(k, \Enc(k, m)) = \Dec(k, k \xor m) = k \xor 
 \end{theorem}
 \begin{proof}
     We have that $\forall m_1, m_2 \in \M$ and $\forall c \in \C$
-    \begin{align*}
-        & \Pr[\Enc(K, m_1) \evaluatesto c] & \\
-        =& \Pr[K \xor m_1 \evaluatesto c] & \\
-        =& \Pr[K \evaluatesto c \xor m_1] & \\
-        =& |\K|^{-1} & \text{($K$ is uniform)} \\
-        =& \dots & \text{(Reverse steps with $m_1$ instead of $m_2$)} \\
-        =& \Pr[\Enc(K, m_2) \evaluatesto c] &  
-    \end{align*}
+    \begin{flalign*}% TODO: alignment
+        \Pr[\Enc(K, m_1) \evaluatesto c] &= \Pr[K \xor m_1 \evaluatesto c] & \\
+        &= \Pr[K \evaluatesto c \xor m_1] & \\
+        &= |\K|^{-1} & \text{($K$ is uniform)} \\
+        &= \dots & \text{(Reverse steps with $m_1$ instead of $m_2$)} \\
+        &= \Pr[\Enc(K, m_2) \evaluatesto c] &  
+    \end{flalign*}
     This satisfies equation \ref{eq:perfect-secrecy-3}.
 \end{proof}
 

@@ -66,10 +66,9 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 \begin{proof}
 	Fix $m, m' \in \Z_p : m \neq m'$ and $\tau, \tau' \in \Z_p$.
 	Assume that $a$ and $b$ are random in $\Z_p$. Then,
-    \begin{align*}
-        & \Pr_{a,b}[h_{a,b}(m) \evaluatesto \tau \wedge h_{a,b}(m') \evaluatesto \tau'] \\
-        = & \Pr_{a,b}[am+b \evaluatesto \tau \wedge am'+b \evaluatesto \tau'] \\
-        = & \Pr_{a,b}\left[\begin{pmatrix}
+    \begin{flalign*}
+        \Pr_{a,b}[h_{a,b}(m) \evaluatesto \tau \wedge h_{a,b}(m') \evaluatesto \tau'] &= \Pr_{a,b}[am+b \evaluatesto \tau \wedge am'+b \evaluatesto \tau'] \\
+        &= \Pr_{a,b}\left[\begin{pmatrix}
         	m & 1 \\
             m' & 1
         \end{pmatrix} \cdot \begin{pmatrix}
@@ -79,7 +78,7 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
             \tau \\
             \tau'
         \end{pmatrix}\right] \\
-        = & \Pr_{a,b}\left[\begin{pmatrix}
+        &= \Pr_{a,b}\left[\begin{pmatrix}
             a \\
             b
         \end{pmatrix} \evaluatesto \begin{pmatrix}
@@ -89,8 +88,9 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
             \tau \\
             \tau'
         \end{pmatrix}\right] \\
-        = & \frac{1}{|\Z_p|^2} = \frac{1}{p^2}
-    \end{align*}
+        &= \frac{1}{|\Z_p|^2} \\
+        &= \frac{1}{p^2}
+    \end{flalign*}
     where $\Pr_{a,b}$ denotes the probability over $a$ and $b$ random in $\Z_p$.
 \end{proof}
 
@@ -100,13 +100,17 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 \end{theorem}
 
 \begin{proof}
-    \begin{align*}
-    	& \forall m \in \M \ \Pr[\Tag(K, m) \evaluatesto \tau] = \Pr_k[h_k(m) \evaluatesto \tau] = \frac{1}{|\Tau|} \\
-    	& \forall m, m' \in \M : m \neq m' \ \forall \tau \in \Tau \ \Pr[\Tag(K, m) \evaluatesto \tau \wedge \Tag(K, m') \evaluatesto \tau'] = \frac{1}{|\Tau|^2} \\
-        \implies & \Pr[\Tag(K, m') \evaluatesto \tau' | \Tag(K, m) \evaluatesto \tau] \\
-        = & \frac{\Pr[Mac(K,m)=\tau \wedge Mac(K,m')=\tau']}{Pr[Mac(K,m)=\tau]} \\
-        = & \frac{|\Tau|^{-2}}{|\Tau|^{-1}} = \frac{1}{|\Tau|}
-    \end{align*}
+	\begin{equation*}
+		\begin{aligned}
+			&\forall m \in \M \ \Pr[\Tag(K, m) \evaluatesto \tau] = \Pr_k[h_k(m) \evaluatesto \tau] = \frac{1}{|\Tau|} \\
+			&\forall m, m' \in \M : m \neq m' \ \forall \tau \in \Tau \ \Pr[\Tag(K, m) \evaluatesto \tau \wedge \Tag(K, m') \evaluatesto \tau'] = \frac{1}{|\Tau|^2} \\
+			&\begin{aligned}
+				\Pr[\Tag(K, m') \evaluatesto \tau' | \Tag(K, m) \evaluatesto \tau] &= \frac{\Pr[Mac(K,m)=\tau \wedge Mac(K,m')=\tau']}{Pr[Mac(K,m)=\tau]} \\
+				&= \frac{|\Tau|^{-2}}{|\Tau|^{-1}} \\
+				&= \frac{1}{|\Tau|}
+			\end{aligned}
+		\end{aligned}
+	\end{equation*}
 \end{proof}
 
 \begin{lemma}
