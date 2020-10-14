@@ -1,43 +1,25 @@
 \begin{tikzpicture}
 	\begin{pgfonlayer}{nodelayer}
-		\node [style=none] (3) at (-3, 1) {};
-		\node [style=none] (4) at (-1, 1) {};
-		\node [style=none] (5) at (-3, 0) {};
-		\node [style=none] (6) at (-1, 0) {};
-		\node [style=none] (7) at (1, 1) {};
-		\node [style=none] (8) at (3, 1) {};
-		\node [style=none] (9) at (1, 0) {};
-		\node [style=none] (10) at (3, 0) {};
 		\node [style=none] (11) at (-1, 0.5) {};
 		\node [style=none] (12) at (1, 0.5) {};
-		\node [style=none] (20) at (0, -1.25) {$k \in \K$};
-		\node [style=none] (21) at (0, -1) {};
+		\node [style=none] (20) at (0, -1.35) {$k \in \K$};
+		\node [style=none] (21) at (0, -1.1) {};
 		\node [style=none] (22) at (0, 0.75) {$c \in \C$};
-		\node [style=none] (23) at (-2, 0.5) {$\Enc$};
-		\node [style=none] (24) at (2, 0.5) {$\Dec$};
+		\node [style=mediumbox] (23) at (-2, 0.5) {$\Enc$};
+		\node [style=mediumbox] (24) at (2, 0.5) {$\Dec$};
 		\node [style=none] (25) at (-3.75, 0.5) {};
 		\node [style=none] (26) at (3.75, 0.5) {};
 		\node [style=none] (27) at (-3, 0.5) {};
 		\node [style=none] (28) at (3, 0.5) {};
 		\node [style=none] (29) at (-4.5, 0.5) {$m \in \M$};
 		\node [style=none] (30) at (4, 0.5) {$m$};
-		\node [style=none] (35) at (2, -0.5) {};
-		\node [style=none] (36) at (2, 0) {};
-		\node [style=none] (37) at (-2, -0.5) {};
-		\node [style=none] (38) at (0, -0.5) {};
-		\node [style=none] (39) at (-2, 0) {};
+		\node [style=none] (35) at (2, -0.6) {};
+		\node [style=none] (36) at (2, -0.1) {};
+		\node [style=none] (37) at (-2, -0.6) {};
+		\node [style=none] (38) at (0, -0.6) {};
+		\node [style=none] (39) at (-2, -0.1) {};
 	\end{pgfonlayer}
 	\begin{pgfonlayer}{edgelayer}
-		\draw (6.center)
-			 to (4.center)
-			 to (3.center)
-			 to (5.center)
-			 to cycle;
-		\draw (10.center)
-			 to (8.center)
-			 to (7.center)
-			 to (9.center)
-			 to cycle;
 		\draw [style=leftarrow] (11.center) to (12.center);
 		\draw [style=leftarrow] (25.center) to (27.center);
 		\draw [style=leftarrow] (28.center) to (26.center);

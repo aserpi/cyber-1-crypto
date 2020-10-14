@@ -12,14 +12,20 @@ A message authentication code (\Mac) allows to verify the integrity and the sour
 
 \subsection{Syntax}
 The typical objects defined and used throughout message-authentication discourses are:
-\begin{itemize}[itemsep=1pt,parsep=0pt]
+%
+\begin{itemize}[parsep=0pt]
 	\item the key space $\K$
+%
 	\item the message space $\M$
+%
 	\item the tag space $\Tau$
+%
 	\item the random variable $K \sim \unif{\K}$
-    \item the tag function $\Tag : \K \times \M \to \Tau$, $(k, m) \mapsto \tau$
-    \item the verify function $\Vrfy : \K \times \M \times \Tau \to \BoolSym$, $(k, m, \tau) \mapsto \Tag(k, m) = \tau$.
+%
+    \item the tag function $\begin{aligned}[t]\Tag \, \tc \, & \K \times \M \to \Tau \\ & (k, m) \mapsto \tau\end{aligned}$
+    \item the verify function $\begin{aligned}[t]\Vrfy \, \tc \, & \K \times \M \times \Tau \to \BoolSym \\ & (k, m, \tau) \mapsto \Tag(k, m) = \tau \, .\end{aligned}$
 \end{itemize}
+%
 \Tag{} and \Vrfy{} form a message-authentication scheme, which must be correct:
 \[
 	\forall m \in \M \ \forall k \in \K \ \forall \tau \in \Tau \ \Vrfy(k, m, \tau) = \top \iff \Tag(k, m) = \tau \, .
@@ -52,10 +58,10 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 
 
 \begin{theorem}
-	Let $p$ be a prime number and let $\M = \Tau = \Z_p \triangleq \{0, 1, \dots, p-1\}$.
+	Let $p$ be a prime number and let $\M = \Tau = \Z_p = \{0, 1, \dots, p-1\}$.
 	Then, we can define the group $(\Z_p, +)$.
-	Consider the function $h_{a,b}(x) \triangleq ax + b \mod p$ where $a, b \in \Z_p$.
-    The family $H \triangleq \{h_{a,b}\}$ is pairwise independent.
+	Consider the function $h_{a,b}(x) = ax + b \mod p$ where $a, b \in \Z_p$.
+    The family $H = \{h_{a,b}\}$ is pairwise independent.
 \end{theorem}
 \begin{proof}
 	Fix $m, m' \in \Z_p : m \neq m'$ and $\tau, \tau' \in \Z_p$.
@@ -85,11 +91,11 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
         \end{pmatrix}\right] \\
         = & \frac{1}{|\Z_p|^2} = \frac{1}{p^2}
     \end{align*}
-    where $Pr_{a,b}$ denotes the probability over $a$ and $b$ random in $\Z_p$.
+    where $\Pr_{a,b}$ denotes the probability over $a$ and $b$ random in $\Z_p$.
 \end{proof}
 
 \begin{theorem}
-    Let $\Tag(K,m) \triangleq h_k(m)$ for $\H \triangleq \{h_k : \M \to \Tau \}_k$ be pairwise independent. 
+    Let $\Tag(K,m) = h_k(m)$ for $\H = \{h_k : \M \to \Tau \}_k$ be pairwise independent. 
     Then, the \Mac{} is $\frac{1}{|\Tau|}$-statistical one-time secure. 
 \end{theorem}
 

@@ -4,7 +4,7 @@ Talking cryptography is usually done in the `confidentiality' realm, where two c
 
 
 \section{Secret communication}
-Modern confidentiality/authentication systems are designed under \emph{Kerckhoffs's principle}, which states that a secure system shall only rely on the encryption keys and not on the algorithm's secrecy.
+Modern confidentiality/authentication systems are designed following \emph{Kerckhoffs's principle}, which states that a secure system shall only rely on the encryption keys and not on the algorithm's secrecy.
 The principle is often condensed as \emph{`no security by obscurity'}.
 
 In symmetric-key encryption (\ske), the same cryptographic key is used for both encryption of plaintext and decryption of ciphertext.
@@ -20,12 +20,12 @@ However, sharing the key between two parties without the risk of eavesdropping i
 \subsection{Syntax}
 The typical objects defined and used throughout cryptography discourses are:
 %
-\begin{itemize}[itemsep=1pt,parsep=0pt]
+\begin{itemize}[parsep=0pt]
     \item the key space $\K$
     \item the message space $\M$
     \item the ciphertext space $\C$
-    \item the encryption function $\Enc: \K \times \M \to \C$, $(k, m) \mapsto c$
-    \item the decryption function $\Dec: \K \times \C \to \M$, $(k, c) \mapsto m$.
+    \item the encryption function $\begin{aligned}[t]\Enc \, \tc \, & \K \times \M \to \C \\ & (k, m) \mapsto c\end{aligned}$
+    \item the decryption function $\begin{aligned}[t]\Dec \, \tc \, & \K \times \C \to \M \\ & (k, c) \mapsto m \, . \end{aligned}$
 \end{itemize}
 \Enc{} and \Dec{} form a cryptographic scheme, which must be correct:
 \[
@@ -35,7 +35,7 @@ The typical objects defined and used throughout cryptography discourses are:
 
 \subsection{Perfect secrecy}
 \begin{definition}[Shannon's `Perfect secrecy']\label{def:perfect-secrecy}
-	Let $M$ be any distribution over the message space $\M$, $C$ any distribution over the cyphertext space $\C$ and $K$ a uniform distribution over the key space $\K$.
+	Let $M$ be any distribution over the message space $\M$, $C$ be any distribution over the cyphertext space $\C$ and $K$ be a uniform distribution over the key space $\K$.
     Then, the cryptosystem (\Enc, \Dec) is deemed \emph{perfectly secret} iff $\forall M, m \in \M \ \forall c \in C$
 %
     \begin{equation}\label{eq:perfect-secrecy-1}
@@ -45,16 +45,18 @@ The typical objects defined and used throughout cryptography discourses are:
 
 The cyphertext reveals nothing about the message, thus making the encryption method uncrackable even by adversaries with infinite computational power.
 This definition does not involve the encryption key because it must hold for all keys in the key space.
-The perfect secrecy definition can be rephrased in different ways, bringing more details to light:
+It can be rephrased in different ways, bringing more details to light:
 %
-\begin{enumerate}[itemsep=1pt,parsep=0pt]
+\begin{enumerate}
     \item equation \ref{eq:perfect-secrecy-1}
+%
     \item $M \bot C$ ($M$ and $C$ are independent)\hfill\refstepcounter{equation}\textup{(\theequation)}\label{eq:perfect-secrecy-2}
-    \item $\forall m_1, m_2 \in \M, c \in \C, k \pickUAR\footnote{\href{https://math.stackexchange.com/a/1576505}{What does this dollar sign over arrow in function mapping mean?}} \K \implies \Pr[\Enc(k, m_1) \evaluatesto c] = \Pr[\Enc(k, m_2) \evaluatesto c]$.\hfill\refstepcounter{equation}\textup{(\theequation)}\label{eq:perfect-secrecy-3}
+%
+    \item $k \pickUAR\footnote{\href{https://math.stackexchange.com/a/1576505}{What does this dollar sign over arrow in function mapping mean?}} \K \implies \Pr[\Enc(k, m_1) \evaluatesto c] = \Pr[\Enc(k, m_2) \evaluatesto c]$.\hfill\refstepcounter{equation}\textup{(\theequation)}\label{eq:perfect-secrecy-3}
 \end{enumerate}
     
 \begin{proposition}
-    All the previous statements are equivalent.
+    All three previous statements are equivalent.
 \end{proposition}
 \begin{proof}
     The proof is structured as a cyclic implication between the three definitions:
@@ -106,12 +108,14 @@ The perfect secrecy definition can be rephrased in different ways, bringing more
 
 \subsection{One-time pad (\otp)}
 The one-time pad (\otp) is a cryptographic scheme such that
+%
 \begin{itemize}
-	\item $\K = \M = \C \triangleq \Bool^l$
+	\item $\K = \M = \C = \Bool^l$
 	\item $K \sim \unif{\K}$
-    \item $\Enc(k, m) \triangleq k \xor m$
-    \item $\Dec(k, c) \triangleq k \xor c$.
+    \item $\Enc(k, m) = k \xor m$
+    \item $\Dec(k, c) = k \xor c$.
 \end{itemize}
+%
 The scheme is correct because $\Dec(k, \Enc(k, m)) = \Dec(k, k \xor m) = k \xor k \xor m = m$.
 
 \begin{theorem}\label{th:otp}
@@ -157,7 +161,7 @@ It is possible to generalise the analysis on \otp{} to all perfectly secret sche
 \begin{proof}
     Perfect secrecy will be disproved by breaking the first definition. \\
     Define $M \sim \unif{\M}$ and $c \in \C : \Pr[C \evaluatesto c] > 0$.
-    Let $\D \triangleq \{\Dec(k, c) : k \in \K\}$ be the set of all images of the decryption routine with all keys in $\K$ and assume $|\K| < |\M|$ (negation of the thesis).
+    Let $\D = \{\Dec(k, c) : k \in \K\}$ be the set of all images of the decryption routine with all keys in $\K$ and assume $|\K| < |\M|$ (negation of the thesis).
     Then, using the definition of $\D$ we have
     \[
         |D| \leq |\K| < |\M| \implies \exists m \in \M \setminus \D \, .
