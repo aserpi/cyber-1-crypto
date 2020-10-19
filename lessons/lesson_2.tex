@@ -50,7 +50,7 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 
 \subsection{Pairwise independent hashing}
 \begin{definition}[Pairwise independence]
-    A family of (hash) functions $H \triangleq \{h_s:\M \to \Tau\}_{s \in \mathcal{S}}$ is said to be pairwise independent iff, for any two distinct messages $m$ and $m'$, we have that $(h_s(m), h_s(m'))$ is uniform over $\Tau^2$ for a random choice of seed $s \in \mathcal{S}$:
+    A family of (hash) functions $H \triangleq \footnote{\href{https://math.stackexchange.com/questions/522864/what-is-the-symbol-triangleq}{What is the symbol $\triangleq$?}} \{h_s:\M \to \Tau\}_{s \in \mathcal{S}}$ is said to be pairwise independent iff, for any two distinct messages $m$ and $m'$, we have that $(h_s(m), h_s(m'))$ is uniform over $\Tau^2$ for a random choice of seed $s \in \mathcal{S}$:
     \[
         \forall m, m' : m \neq m' \ \forall \tau, \tau' \in \Tau \ \Pr[h_s(m) \evaluatesto \tau \wedge h_s(m') \evaluatesto \tau'] = \frac{1}{|\Tau|^2} \, .
     \]
