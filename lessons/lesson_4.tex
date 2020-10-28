@@ -1,7 +1,23 @@
 \mychapter{4}{Lesson 4} %181005
 
-\section{Negligible function}
+\section{Computational security}
+Computational security models real-world adversaries.
+The attacker $\Adv$ is an `efficient' Turing machine and a tiny probability of failure is allowed.
+In concrete security, no $\Adv$ Turing machine running for $t$ steps can break $\Pi$ with probability better than $\eps$ (e.g. $2^{-80}$).
+In asymptotic security, everything is parametrized with a security parameter $\lambda \in \NaturalsZ$.
 
+\begin{definition}[\ppt{} Turing machine]
+	A Turing machine $\Adv$ is probabilistic polynomial time (\ppt) if its worst-case running time its polynomial, i.e. there exists a function $p(\lambda) = \poly(\lambda)$ such that $\forall x \in \Bool^\star \ r \in \Bool^\star$ ($r$ models a random tape), $\Adv(1^\lambda, x, r)$ runs in time $p(\lambda)$.
+\end{definition}
+%
+\begin{definition}[poly function]
+	A function $f : \NaturalsZ \to \NaturalsZ$ is polynomial, indicated as $f(x) = \poly(x)$, if there exists a $c \in \NaturalsZ$ such that $f(c) = O(x^c)$.
+\end{definition}
+%
+\noindent We say that a Turing machine is efficient if it is a \ppt{} Turing machine with input $1^\lambda$.
+
+
+\subsection{Negligible functions}
 What is exactly a negligible function? Below here there is a possible interpretation of this notion:
 \begin{quotation}
     ``In real life, we can just consider adversaries with limited computational power; even if every non-perfectly secure authentication scheme can resist to unbounded computational power, the true unbounded computational power doesn't exist at all. So, it's reasonable to consider just bounded adversaries.
