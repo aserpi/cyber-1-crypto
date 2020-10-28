@@ -11,49 +11,66 @@ In asymptotic security, everything is parametrized with a security parameter $\l
 \end{definition}
 %
 \begin{definition}[poly function]
-	A function $f : \NaturalsZ \to \NaturalsZ$ is polynomial, indicated as $f(x) = \poly(x)$, if there exists a $c \in \NaturalsZ$ such that $f(c) = O(x^c)$.
+	A function $\eps : \NaturalsZ \to \NaturalsZ$ is polynomial, indicated as $\eps(\lambda) = \poly(\lambda)$, if there exists a $c \in \NaturalsZ$ such that $\eps(c) = O(\lambda^c)$.
 \end{definition}
 %
 \noindent We say that a Turing machine is efficient if it is a \ppt{} Turing machine with input $1^\lambda$.
 
 
-\subsection{Negligible functions}
-What is exactly a negligible function? Below here there is a possible interpretation of this notion:
+
+\section{Negligible functions}
+\begin{definition}[Negligible function]
+	The function $\eps : \NaturalsZ \to [0,1]$ is negligible if $\forall p(\lambda) = poly(\lambda)$
+	\[
+		\exists \lambda_0 \in \NaturalsZ : \forall \lambda \geq \lambda_0 \ f(\lambda) \leq \frac{1}{p(\lambda)} \, .
+	\]
+\end{definition}
+%
+\noindent It is equivalent to stating that $\eps(\lambda) = O(p(\lambda)^{-1}) \ \forall p(\lambda) = \poly(\lambda)$.
+Below there is an informal interpretation of negligible functions.
+%
 \begin{quotation}
-    ``In real life, we can just consider adversaries with limited computational power; even if every non-perfectly secure authentication scheme can resist to unbounded computational power, the true unbounded computational power doesn't exist at all. So, it's reasonable to consider just bounded adversaries.
-
-    So consider a scheme $\Pi$ where the only attack against it is brute-force attack. We consider $\Pi$ to be secure if it cannot be broken by a brute-force attack in polynomial time.
-
-    The idea of \textbf{negligible probability} encompasses this exact notion. In $\Pi$, let's say that we have a polynomial-bounded adversary. Brute force attack is not an option.
-
-    But instead of brute force, the adversary can try (a polynomial number of) random values and hope to guess the right one. In this case, we define security using negligible functions: The probability of success has to be smaller than the reciprocal of any polynomial function.
-
-    And this makes a lot of sense: if the success probability for an individual guess is a reciprocal of a polynomial function, then the adversary can try a polynomial amount of guesses and succeed with high probability. If the overall success rate is $\frac{1}{poly(\lambda)}$ then we consider this attempt a feasible attack to the scheme, which makes the latter insecure.
-
-    So, we require that the success probability must be less than the reciprocal of every polynomial function. This way, even if the adversary tries $poly(\lambda)$ guesses, it will not be significant since it will only have tried: $\frac{poly(\lambda)}{superpoly(\lambda)}$\footnote{If we design a function hard for $superpoly(\lambda)$ possible attempts and the attacker completed $poly(\lambda)$ attempts, he has just $ \P [\frac{poly(\lambda)}{superpoly(\lambda)}] $ of finding the key to break the scheme}
-
-    As $\lambda$ grows, the denominator grows far faster than the numerator and the success probability will not be significant\footnote{\href{https://crypto.stackexchange.com/questions/5832/what-exactly-is-a-negligible-and-non-negligible-function}{\textsf{``What exactly is a negligible (and non-negligible) function?'' --- Cryptography Stack Exchange}}}.''
-
+	[...] consider a scheme $\Pi$ where the only attack against it is brute-force attack.
+	We consider $\Pi$ to be secure if it cannot be broken by a brute-force attack in polynomial time.
+	
+	The idea of negligible probability encompasses this exact notion.
+	In $\Pi$, let's say that we have a polynomial-bounded adversary.
+	Brute force attack is not an option.
+	But instead of brute force, the adversary can try (a polynomial number of) random values and hope to guess the right one.
+	In this case, we define security using negligible functions: The probability of success has to be smaller than the reciprocal of any polynomial function.
+	
+	And this makes a lot of sense: If the success probability for an individual guess is a reciprocal of a polynomial function, then the adversary can try a polynomial amount of guesses and succeed with high probability.
+	In sum then, if the overall success rate is $\sfrac{1}{\poly(\lambda)}$ then we consider this a feasible attack and the scheme is insecure.
+	
+	So, we require that the success probability must be less than the reciprocal of every polynomial function.
+	This way, even if the adversary tries $\poly(\lambda)$ guesses, it will not be significant since it will only have tried: $\sfrac{\poly(\lambda)}{\operatorname{superpoly}(\lambda)}$\footnote{If we design a function hard for $\operatorname{superpoly}(\lambda)$ possible attempts and the attacker completed $poly(\lambda)$ attempts, he has just probability $\sfrac{\poly(\lambda)}{\operatorname{superpoly}(\lambda)} $ of finding the key to break the scheme}.
+	
+	As $\lambda$ grows, the denominator grows far faster than the numerator and the success probability will not be significant.
+	\footnote{
+		AFS. ``What exactly is a negligible (and non-negligible) function?''.
+		In: \emph{Cryptography Stack Exchange} (2012).
+		URL: \url{https://crypto.stackexchange.com/questions/5832/what-exactly-is-a-negligible-and-non-negligible-function} (visited on 2020-10-28).
+	}
 \end{quotation}
 
-\subsubsection{Definition}
-Let $\nu : \mathbb{N} \to [0,1]$ be a function. Then it is deemed \textbf{negligible} iff:
-\begin{equation*}
-    \forall p(\lambda) \in poly(\lambda) \implies \nu(\lambda) \in o(\frac{1}{p(\lambda)})
-\end{equation*}
-
 \begin{exercise}
-    Let $p(\lambda), p'(\lambda) \in poly(\lambda)$ and $\nu(\lambda), \nu'(\lambda) \in \negl\lambda$. Then prove the following:
-
+    Let $p(\lambda), p'(\lambda) = poly(\lambda)$ and $\eps(\lambda), \eps'(\lambda) = \negl\lambda$.
+    Then prove the following:
     \begin{enumerate}
         \item $p(\lambda) \cdot p'( \lambda) \in  \poly(\lambda)$
-        \item $\nu(\lambda) + \nu'(\lambda) \in \negl\lambda$
+        \item $\eps(\lambda) + \eps'(\lambda) \in \negl\lambda$
+        \item $\eps(\lambda) + \eps'(\lambda) = \negl{\lambda}$
+        \item $p(\lambda) \cdot \eps(\lambda) = \negl{\lambda}$
+        \item $\eps(\sqrt[c]{\lambda}) = \negl{\lambda}$
     \end{enumerate} 
 \end{exercise}
 
-\begin{solution}[1.1]
-
-    \todo{Questa soluzione usa disuguaglianze deboli; per essere negligibile una funzione dev'essere strettamente minore di un polinomiale inverso. Da approfondire}
+\begin{solution}
+    \todo{
+    	This solution uses weak inequalities.
+    	However, a function must be strictly lesser than the reciprocal of a polynomial in order to be negligible.
+    	Idea: Exploit computational hardness, in particular P $\neq$ NP.
+    }
 
     We need to show that for any $c \in \mathbb{N} $, then there is $n_{0}$ such that $\forall n > n_{0} \implies h(n) \leq n^{-c}$.
     
