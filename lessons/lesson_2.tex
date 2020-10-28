@@ -40,7 +40,7 @@ However, unforgeability does not imply that an adversary cannot forge tags: in t
 \begin{definition}[$\eps$-statistical one-time security]
 	We say that a \Mac{} has $\eps$-statistical one-time security if $\forall m, m' \in \M : m \neq m' \ \forall \tau, \tau' \in \Tau$
 	\begin{equation}
-		\Pr[\Tag(K,m') \evaluatesto \tau' | \Tag(K,m) \evaluatesto \tau] \leq \eps \, .
+		\Pr[\Tag(K,m') = \tau' | \Tag(K,m) = \tau] \leq \eps \, .
 	\end{equation}
 \end{definition}
 
@@ -50,9 +50,9 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 
 \subsection{Pairwise independent hashing}
 \begin{definition}[Pairwise independence]
-    A family of (hash) functions $H \triangleq \footnote{\href{https://math.stackexchange.com/questions/522864/what-is-the-symbol-triangleq}{What is the symbol $\triangleq$?}} \{h_s:\M \to \Tau\}_{s \in \mathcal{S}}$ is said to be pairwise independent iff, for any two distinct messages $m$ and $m'$, we have that $(h_s(m), h_s(m'))$ is uniform over $\Tau^2$ for a random choice of seed $s \in \mathcal{S}$:
+    A family of (hash) functions $H = \{h_s:\M \to \Tau\}_{s \in \mathcal{S}}$ is said to be pairwise independent iff, for any two distinct messages $m$ and $m'$, we have that $(h_s(m), h_s(m'))$ is uniform over $\Tau^2$ for a random choice of seed $s \in \mathcal{S}$:
     \[
-        \forall m, m' : m \neq m' \ \forall \tau, \tau' \in \Tau \ \Pr[h_s(m) \evaluatesto \tau \wedge h_s(m') \evaluatesto \tau'] = \frac{1}{|\Tau|^2} \, .
+        \forall m, m' : m \neq m' \ \forall \tau, \tau' \in \Tau \ \Pr[h_s(m) = \tau \wedge h_s(m') = \tau'] = \frac{1}{|\Tau|^2} \, .
     \]
 \end{definition}
 
@@ -67,21 +67,21 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 	Fix $m, m' \in \Z_p : m \neq m'$ and $\tau, \tau' \in \Z_p$.
 	Assume that $a$ and $b$ are random in $\Z_p$. Then,
     \begin{flalign*}
-        \Pr_{a,b}[h_{a,b}(m) \evaluatesto \tau \wedge h_{a,b}(m') \evaluatesto \tau'] &= \Pr_{a,b}[am+b \evaluatesto \tau \wedge am'+b \evaluatesto \tau'] \\
+        \Pr_{a,b}[h_{a,b}(m) = \tau \wedge h_{a,b}(m') = \tau'] &= \Pr_{a,b}[am+b = \tau \wedge am'+b = \tau'] \\
         &= \Pr_{a,b}\left[\begin{pmatrix}
         	m & 1 \\
             m' & 1
         \end{pmatrix} \cdot \begin{pmatrix}
             a \\
             b
-        \end{pmatrix} \evaluatesto \begin{pmatrix}
+        \end{pmatrix} = \begin{pmatrix}
             \tau \\
             \tau'
         \end{pmatrix}\right] \\
         &= \Pr_{a,b}\left[\begin{pmatrix}
             a \\
             b
-        \end{pmatrix} \evaluatesto \begin{pmatrix}
+        \end{pmatrix} = \begin{pmatrix}
             m & 1 \\
             m' & 1
         \end{pmatrix}^{-1} \cdot \begin{pmatrix}
@@ -102,10 +102,10 @@ His goal is to forge a tag on a new message $m' \neq m$, i.e. finding a tag $\ta
 \begin{proof}
 	\begin{equation*}
 		\begin{aligned}
-			&\forall m \in \M \ \Pr[\Tag(K, m) \evaluatesto \tau] = \Pr_k[h_k(m) \evaluatesto \tau] = \frac{1}{|\Tau|} \\
-			&\forall m, m' \in \M : m \neq m' \ \forall \tau \in \Tau \ \Pr[\Tag(K, m) \evaluatesto \tau \wedge \Tag(K, m') \evaluatesto \tau'] = \frac{1}{|\Tau|^2} \\
+			&\forall m \in \M \ \Pr[\Tag(K, m) = \tau] = \Pr_k[h_k(m) = \tau] = \frac{1}{|\Tau|} \\
+			&\forall m, m' \in \M : m \neq m' \ \forall \tau \in \Tau \ \Pr[\Tag(K, m) = \tau \wedge \Tag(K, m') = \tau'] = \frac{1}{|\Tau|^2} \\
 			&\begin{aligned}
-				\Pr[\Tag(K, m') \evaluatesto \tau' | \Tag(K, m) \evaluatesto \tau] &= \frac{\Pr[Mac(K,m)=\tau \wedge Mac(K,m')=\tau']}{Pr[Mac(K,m)=\tau]} \\
+				\Pr[\Tag(K, m') = \tau' | \Tag(K, m) = \tau] &= \frac{\Pr[Mac(K,m)=\tau \wedge Mac(K,m')=\tau']}{Pr[Mac(K,m)=\tau]} \\
 				&= \frac{|\Tau|^{-2}}{|\Tau|^{-1}} \\
 				&= \frac{1}{|\Tau|}
 			\end{aligned}
