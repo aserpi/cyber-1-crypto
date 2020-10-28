@@ -16,6 +16,10 @@
 % Symbol negation
 \RequirePackage{centernot}
 
+% Required for algorithms
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+
 % Required for crypto games
 \RequirePackage{tikz}
 \usetikzlibrary{arrows,shadows} % shadows for the entities, arrows for the messages
@@ -99,6 +103,11 @@
 \newcommand{\ggm}{\textsc{ggm}}
 % Rivest-Shamir-Adleman
 \newcommand{\rsa}{\textsc{rsa}}
+
+% Algorithms
+%
+% Do-while construct
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1 \\}
 
 % Function classes and relations
 %

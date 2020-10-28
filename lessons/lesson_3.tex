@@ -1,106 +1,190 @@
 \mychapter{3}{Lesson 3} %181003
 
 \section{Randomness Extraction}
+Randomness extraction is the process of extracting real randomness from imperfect randomness.
 
-\textbf{Goal:} extract "real" randomness from "imperfect" randomness.
 
-\bigskip
-Suppose to have a biased coin $B s.t. Pr[B=0]=p\neq \frac{1}{2}$ and\\ $Pr[B=1]=1-p$.\\
-Can you make it uniform?
+\subsection{Von Neumann extractor}
+Take a biased coin $B$ such that $\Pr[B = 0] = p \neq \sfrac{1}{2}$ and $\Pr[B = 1] = 1 - p$.
+The Von Neumann extractor is the algorithm
+%
+\begin{algorithm}[H]
+	\caption{Von Neumann extractor}\label{alg:von-neumann-extractor}
+	\begin{algorithmic}
+		\Do
+			\State sample $b_1 \gets B$
+			\State sample $b_2 \gets B$
+		\doWhile{$b_1 \neq b_2$}
+		\Return{$b_2$}
+	\end{algorithmic}
+\end{algorithm}
 
-\subsection{Von Neumann Extractor}
-\begin{enumerate}
-    \item Sample $b_1\pickUAR B; b_2\pickUAR B$
-    \item If $b_1=b_2$ go to 1.
-    \item Else:
-    \begin{itemize}
-        \item If $b_1=0;b_2=1$ output 1
-        \item If $b_1=1;b_2=0$ output 0 
-    \end{itemize}
-\end{enumerate}
-\textbf{Considerations: }
-\begin{itemize}
-    \item The probability of both cases in 3. is $p(p-1)$
-    \item The probability to reach 3. is $2p(p-1)$
-    \item $Pr[\text{Fail n-times}]=(1-2p(1-p))^n$ which is very small
-\end{itemize}
+$b_1$ and $b_2$ are \iid, thus the probability of both outputs is $\Pr[b_1 = 0 \wedge b_2 = 1] = \Pr[b_1 = 1 \wedge b_2 = 0] = p(p-1)$.
+The probability of outputting something in a given iteration is $2p(p-1)$, therefore the probability of failing after $n$ iterations is $\Pr[\text{fail }n \text{ times}] = [1 -2p(1-p)]^n$, which is very small (it follows the geometric distribution).
 
-\textbf{Goal: } Let $X$ be a Random Variable, I want to design an Extractor such that $Ext(X)$ is uniform.
-\underline{PROBLEM: } Impossible as stated. What if $X$ is constant? $\implies$ Add the requirement that $X$ has uncertainty (ENTROPY)
 
-\begin{definition}
-    MIN-ENTROPY of $X$ (written as $H_{\infty}$) is:
+\subsection{Unseeded extraction}
+In real life there are sources of unpredictability and their randomness is measured through min-entropy.
+The min-entropy depends on the probability of the most frequent event, a sort of worst-case scenario for randomness.
 
-    $$H_{\infty}(X)=-log_2 max_x Pr[X=x]$$
-    Where $max_x$ is the x that maximize the probability.
+\begin{definition}[Min-entropy]
+	The min-entropy $H_{\infty}$ of a random variable $X$ is defined as $H_{\infty}(X) = - \log_2 \max \Pr[X = x]$.
 \end{definition}
-\begin{example}
-    Say $X=\{0,1\}^n$
 
-    \begin{enumerate}
-        \item $X$ is constant($Pr[X=\bar{x}]=1, Pr[X=x\neq \bar{x}]=0$)\\
-        $\implies H_{\infty}(X)=0$
-        \item $X\equiv U_n \implies H_{\infty}(x)=n$ (since $X$ is uniform $Pr[X=x]=2^{-n}$)   
-    \end{enumerate}
+\begin{example}
+	Take $X = \unif{\Bool^n}$, then $H_{\infty} = - \log_2 \frac{1}{2^n} = n$.
+	Now, take $X$ such that $\Pr[X = 0^n] = 1$ and $\Pr[X \neq 0^n] = 0$ (it is always $0^n$), then $H_{\infty} = - \log_2 1 = 0$.
 \end{example}
 
-\textbf{Question: }We want $Ext:\{0,1\}^n \to \{0,1\}$ working $\forall X s.t. H_{\infty}(X)\geq k$\\
-\textbf{Claim: } Impossible even for $k=n-1$
+\begin{definition}
+	An $(n,k)$-source is a random variable $X \in \Bool^n$ such that  $H_{\infty}(X) \geq k$.
+\end{definition}
+
+We want to create a function  $\Ext$ that extracts perfect randomness from a $(n,k)$-source that works for all possible $(n,k)$-sources.
+However, this is not possible even if $\Ext : \Bool^n \to \Bool$ and $k = n - 1$.
 \begin{proof}
-    Let Ext be any candidate extractor, Let b be any binary value s.t. $|Ext^-1(b)|$ is maximal ($Ext^-1: \{0,1\} \to \{0,1\}^n$)\\
-    $\implies |Ext^-1(b)|\geq 2^{n-1}=\frac{2^2}{2}$
-
-    \begin{figure}[ht]
-        \centering
-        \begin{tikzpicture}[>=latex]
-            
-            \node (a1) {};
-            \node[below=0.3cm of a1] (a2) {};
-            \node[below=0.3cm of a2] (a3) {};
-
-            \node[below=0.6cm of a3] (a4) {};
-            \node[below=0.3cm of a4] (a5) {};
-            \node[below=0.3cm of a5] (a6) {};
-
-            \node[right=4cm of a2] (b1) {$x=0$};
-            \node[right=4cm of a5] (b3) {$x=1$};
-
-            \node[ellipse,line width = 1pt, draw=black,minimum size=3cm,fit={(a1) (a6)}] {};
-
-            \node[below=1cm of a6,font=\color{black}\Large] {$\{0,1\}^n$};
-
-            \draw[-,black] (a3) to[out=-10,in=190] (b1.190);
-            \draw[-,black] (a2) -- (b1.180);
-            \draw[-,black] (a1) to[out=10,in=170] (b1.170);
-
-            \draw[-,black] (a6) to[out=-10,in=190] (b3.190);
-            \draw[-,black] (a5) -- (b3.180);
-            \draw[-,black] (a4) to[out=10,in=170] (b3.170);
-        \end{tikzpicture}
-    \end{figure}
-
-    Define $X$ to be uniform over $Ext^-1(b)$ so $H_{\infty}(x)=n-1$ but $Ext(X)=b$ CONSTANT.
-    \todo{Help with the proof}
+	Let $\Ext : \Bool^n \to \Bool$ be any candidate extractor.
+	Let $b \in \Bool$ such that $|\Ext^{-1}(b)| \geq 2^{n-1}$ (the most frequent case).
+	
+	\begin{figure}[H]
+		\centering
+		\input{tikz/3-unseeded-extractor.tikz}
+		\caption{The candidate extractor $\Ext$.}
+	\end{figure}
+	
+	
+	Let the random variable $X_{\text{bad}}$ be uniform over $\Ext^{-1}(b)$.
+	Then, $\Ext(X_\text{bad}) = b$ (always the same) and $H_{\infty}(X_\text{bad}) \geq n - 1$.
 \end{proof}
 
-\begin{theorem}
-    \textbf{Way-Out-Seeded-Extractor} allow $X$ to take SMALL uniformly random SEED(catalyst)
 
-    $$Ext: \underbrace{\{0,1\}^d}_{seed(public)}\times \underbrace{\{0,1\}^n}_{input} \to \underbrace{\{0,1\}^m}_{output}$$
-\end{theorem}
-\begin{definition}
-    We say that $Ext:\{0,1\}^d \times \{0,1\}^n \to \{0,1\}^l$ is a $(k,\epsilon)$-extractor ("good") if $\forall x s.t. H_{\infty}(X)\geq k$ we have:
-    $$SD((S,Ext(S,x)),(S,U_l))\leq \epsilon$$ 
-    where $S\equiv U_d$, $SD$ denotes the statistical distance and we are basically comparing two uniform values ($x$ and $U_l$) 
+\subsection{Seeded extraction}
+\begin{definition}[Statistical distance]
+	Let $X$ and $X'$ be two random variables over the set $\X$.
+	Their statistical distance $\SD$ is defined as
+	\[
+		\SD(X, X') = \frac{1}{2}\sum_{x \in \X } \abs{\Pr[X=x] - \Pr[X'=x]} \, .
+	\]
+\end{definition}
+%
+\noindent It is $0$ when $X$ and $X'$ follow the same distribution, it is $1$ when they have no possible events in common.
+
+\begin{definition}[Seeded extractor]
+	Let $U_l \sim \unif{\Bool^l}$ and $S \sim \unif{\Bool^d}$.
+	A function
+	\[
+		\Ext: \underbrace{\Bool^d}_{\text{seed (public})} \times \underbrace{\Bool^n}_{\text{input}} \to \underbrace{\Bool^l}_{\text{output}}
+	\]
+	is a $(k, \eps)$-extractor if $\forall X \in \Bool^n : H_{\infty}(X) \geq k$
+	\[
+		\SD((S, \Ext(S, X)), (S, U_l)) \leq \eps \, .
+	\]
+\end{definition}
+%
+\noindent Even though the seed is public, the output of the extractor cannot be distinguished from a random string.
+
+\begin{lemma}[Leftover hash lemma]\label{lemma:leftover-hash}
+	Let $\H = \{h_S : \Bool^n \to \Bool^l\}_{S \in \Bool}$ be a pairwise independent family (that includes an extractor for each seed).
+	Then, $\Ext(s, x) = h_s(x)$ is a $(k, \eps)$-extractor for $k \geq l + 2 \log \frac{2}{\eps} -2$.
+\end{lemma}
+%
+\noindent Informally, the leftover hash lemma states that the length of the output must be less than $k$.
+In order to prove it, we need several other elements.
+
+\begin{definition}[Collision probability]\label{def:col}
+	Let $Y$ and $Y'$ two \iid{} random variables over a set $\Y$.
+	Then, the collision probability of $Y$ is defined as
+	\[
+		\Col(Y) = \Pr[Y = Y'] = \sum_{y \in \Y} \Pr[Y = y]^2
+	\]
+	and is the probability that both variables assume the same value.
 \end{definition}
 
-\textbf{Idea: } Even if the seed is public the $SD$ must not be influenced. Therefore the two compared variables should be uniform so that $\epsilon$ is small. In this way the output of the extractor can't be distinguished from a uniform string.
+\begin{exercise}\label{ex:leftover-hash-pre-1}
+	Let $X$ be a random variable such that $H_{\infty}(X) \geq k$.
+	Then,
+	\begin{equation}\label{eq:leftover-hash-pre-1}
+		\Col(X) \leq 2^{-k} \, .
+	\end{equation}
+\end{exercise}
+\todo{Solution}
 
-\begin{definition}
-    \textbf{Statistical Distance:} a distance between two random variables.\\
-    Say that $X,X'$ are Random Variables over $\X$.\\
-    $SD(x,x')=\frac{1}{2}\sum_{x\in \X }|Pr[X=x]-Pr[X'=x]|$
-    \todo{Image of the statistical distance}
-\end{definition}
+\begin{exercise}\label{ex:leftover-hash-pre-2}
+	Let $\H$ be a pairwise-independent family, then
+	\begin{equation}\label{eq:leftover-hash-pre-2}
+		\Pr[h_S(X) = h_S[X'] \wedge X \neq X'] \leq 2^{-l} \, .
+	\end{equation}
+\end{exercise}
+\todo{Solution}
 
-\todo{Leftover hash lemma}
+\begin{lemma}[Technical lemma for the leftover hash]\label{lem:leftover-hash-technical}
+	Let $Y$ be a random variable over a set $\Y$ such that its collision probability is at most $|\Y|^{-1} + 1 + 4\eps^2$. Then,
+	\[
+		\SD(Y, \unif{\Y}) \leq \eps \, .
+	\]
+\end{lemma}
+\begin{proof}
+	Define $q_y$ as
+	%
+	\[
+		q_y = \Pr[Y = y] - \frac{1}{|\Y|}
+	\]
+	%
+	and let $s_t$ be its sign:
+	%
+	\[
+		s_y = \begin{cases}
+			1 & \text{if } q_y \geq 0 \\
+			0 & \text{otherwise.}
+		\end{cases}
+	\]
+	%
+	Then, we can define the vectors $\vec{q_y} = (q_y)_{y \in \Y}$ and $\vec{s_y} = (s_y)_{y \in \Y}$, so that
+	%
+	\begin{equation}\label{eq:leftover-hash-proof-1}
+		\begin{aligned}[b]
+			\SD(Y, \unif{\Y}) &= \frac{1}{2} \sum_{y \in \Y} \abs{\Pr[Y = y] - \frac{1}{|\Y|}} & \\
+			&= \frac{1}{2} \sum_{y \in \Y} q_{y} \cdot s_{y} & \\
+			&= \frac{1}{2} \DotProduct{\vec{q_y}}{\vec{s_y}} & \\
+			&\leq \frac{1}{2} \sqrt{\DotProduct{\vec{q_y}}{\vec{q_y}} \cdot \DotProduct{\vec{s_y}}{\vec{s_y}}} & \text{(Law of cosines)} \\
+			&= \frac{1}{2} \sqrt{\sum_{y \in \Y} q_y \cdot |\Y|}
+		\end{aligned}
+	\end{equation}
+	%
+	Let us focus only on $q_y$:
+	\begin{equation}\label{eq:leftover-hash-proof-2}
+		\begin{aligned}[b]
+			\sum_{y \in \Y} q_y &= \sum_{y \in \Y} (\Pr[Y = y]^2 + \frac{1}{|\Y|^2} - 2 \frac{\Pr[Y = y]}{|\Y|}) & \\
+			&= \Col(Y) + \frac{1}{|\Y|} - \frac{2}{|\Y|} & \\
+			&= \Col(Y) - \frac{1}{|\Y|} & \\
+			&= \frac{(1 + e \eps^2)}{|\Y|} - \frac{1}{|\Y|} & \text{(By assumption)} \\
+			&= \frac{4\eps^2}{|\Y|}
+		\end{aligned}
+	\end{equation}
+	
+	Substituting \eqref{eq:leftover-hash-proof-2} in \eqref{eq:leftover-hash-proof-1} we have
+	\begin{align*}
+		\SD(Y, \unif{\Y}) &\leq \frac{1}{2} \sqrt{\frac{4\eps^2}{|\Y|} |\Y|} \\
+		&= \eps
+	\end{align*}
+\end{proof}
+
+\noindent Finally, we can prove lemma \ref{lemma:leftover-hash}.
+\begin{proof}[Proof of leftover hash lemma.]
+	Let $y = (S, h_S(x))$, $\Y = \Bool^{d+l}$ and $y' = (S', h_{S'}(X'))$. Then,
+%
+	\begin{flalign*}		
+		\Col(Y) &= \Pr[Y = Y'] & \\
+		&= \Pr[S = S' \wedge h_S(x) = h_S(x')] & \\
+		&= \Pr[S = S'] \Pr[h_S(X) = h_S(X')] & \\
+		&= 2^{-d} \Pr[h_S(X) = h_S(X')] & \text{(Using \ref{eq:leftover-hash-pre-1})} & \\
+		&= 2^{-d} \Pr[X = X' \vee (X = X' \wedge h_S(x) = h_S(x'))] & \\
+		&\leq 2^{-d} ( \Pr[h_S(x) = h_S(x') \wedge X = X'] + \Pr[X = X'] ) & \text{(Boole's ineq.)} \\
+		&\leq 2^{-d}(2^{-k} + 2^{-l}) & \text{(By \ref{eq:leftover-hash-pre-1} and \ref{eq:leftover-hash-pre-2})} \\
+		&= \frac{1}{2^{d+l}} (2^{l-k} + 1) & \\
+		&\leq \frac{1}{2^{d+l}} (2^{2 - 2\log \eps^{-1}} + 1) & \\
+		&= \frac{1}{|\Y|} (1 + 4 \eps^2)
+	\end{flalign*}
+%
+	By lemma \ref{lem:leftover-hash-technical} we have that $\SD(Y, \unif{\Y}) \leq \eps$.
+\end{proof}
